@@ -1,0 +1,441 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+/*
+ * Mariage de Ludivine & Paul — direction « papier et encre ».
+ *
+ * La structure d'Aparté est intacte : un magazine imprimé, papier clair,
+ * filets, lettrines, points de conduite, une didone immense. Seules les
+ * valeurs changent, pour porter les couleurs du faire-part :
+ *
+ *   papier   #f9f6ed  le papier crème de l'invitation
+ *   encre    #1c3a29  le vert profond du faire-part
+ *   filets   #d99b6b  saumon, à la place de l'or
+ *   liens    #2f5a41  vert feuille
+ *   bandes   #1c3a29  le champ vert de l'invitation, texte crème dessus
+ *
+ * Les noms de jetons n'ont pas bougé (« teal » désigne aujourd'hui un vert,
+ * « gold » un saumon) : ils sont écrits dans une quarantaine d'endroits, dont
+ * les composants shadcn. Seules les valeurs ont changé.
+ */
+
+:root {
+  /* Marque */
+  --ink: #1c3a29;
+  --teal: #2f5a41;
+  --teal-deep: #1c3a29;
+  --gold: #d99b6b;
+  --gold-light: #ffd9b8;
+  --cream: #f9f6ed;
+
+  /* Dérivées */
+  --paper: #f9f6ed;
+  --paper-deep: #f2ece0;
+  --ink-soft: #4a594e; /* 6,87:1 sur le papier */
+  --gold-ink: #96562f; /* or lisible en petit sur le papier, 5,30:1 */
+  --teal-hover: #20402e;
+  --mist: #9dae9f; /* texte secondaire sur teal foncé, 5,33:1 */
+  --rule: color-mix(in oklab, var(--gold) 80%, transparent);
+
+  /* Correspondance shadcn */
+  --background: var(--paper);
+  --foreground: var(--ink);
+  --card: #fffdf6;
+  --card-foreground: var(--ink);
+  --popover: #fffdf6;
+  --popover-foreground: var(--ink);
+  --primary: var(--teal);
+  --primary-foreground: #ffffff;
+  --secondary: var(--paper-deep);
+  --secondary-foreground: var(--ink);
+  --muted: var(--paper-deep);
+  --muted-foreground: var(--ink-soft);
+  --accent: var(--paper-deep);
+  --accent-foreground: var(--ink);
+  --destructive: #a3341f;
+  --border: color-mix(in oklab, var(--ink) 14%, transparent);
+  --input: color-mix(in oklab, var(--ink) 18%, transparent);
+  --ring: var(--teal);
+  --radius: 0.25rem;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-editorial: cubic-bezier(0.65, 0, 0.15, 1);
+
+  /* Grain photo (bruit fractal en niveaux de gris) */
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='linear' slope='2.2' intercept='-.6'/%3E%3CfeFuncG type='linear' slope='2.2' intercept='-.6'/%3E%3CfeFuncB type='linear' slope='2.2' intercept='-.6'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@theme inline {
+  --font-sans: var(--font-hanken), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-bodoni), "Didot", "Bodoni 72", serif;
+  --font-display: var(--font-bodoni), "Didot", "Bodoni 72", serif;
+
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-teal: var(--teal);
+  --color-teal-hover: var(--teal-hover);
+  --color-teal-deep: var(--teal-deep);
+  --color-gold: var(--gold);
+  --color-gold-light: var(--gold-light);
+  --color-gold-ink: var(--gold-ink);
+  --color-cream: var(--cream);
+  --color-paper: var(--paper);
+  --color-paper-deep: var(--paper-deep);
+  --color-mist: var(--mist);
+  --color-rule: var(--rule);
+
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html {
+    @apply font-sans;
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-size: 1rem;
+    line-height: 1.6;
+    font-kerning: normal;
+    font-variant-ligatures: common-ligatures;
+  }
+  ::selection {
+    background: color-mix(in oklab, var(--gold-light) 55%, transparent);
+    color: var(--ink);
+  }
+  :focus-visible {
+    outline: 2px solid var(--teal);
+    outline-offset: 3px;
+  }
+  .on-teal :focus-visible {
+    outline-color: var(--gold-light);
+  }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+}
+
+@layer components {
+  /* Didone d'affiche : Bodoni Moda à sa taille optique maximale */
+  .display {
+    font-family: var(--font-display);
+    font-optical-sizing: none;
+    font-variation-settings: "opsz" 96;
+    font-weight: 400;
+    letter-spacing: -0.025em;
+    line-height: 0.9;
+  }
+  /* Bodoni de texte (questions, légendes longues) : taille optique automatique */
+  .serif {
+    font-family: var(--font-display);
+    font-optical-sizing: auto;
+  }
+
+  /* Lettrine sur 4 lignes */
+  .lettrine::first-letter {
+    float: left;
+    font-family: var(--font-display);
+    font-variation-settings: "opsz" 96;
+    font-weight: 400;
+    font-size: 5.15em;
+    line-height: 0.8;
+    padding: 0.06em 0.09em 0 0;
+    margin-top: 0.02em;
+    color: var(--teal-deep);
+  }
+
+  /* Filets or */
+  .rule {
+    height: 1px;
+    background: var(--rule);
+  }
+
+  /* Liens éditoriaux : soulignés fins, l'or prend le relais au survol */
+  .link-edito {
+    color: var(--teal);
+    text-decoration-line: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.3em;
+    text-decoration-color: color-mix(in oklab, var(--teal) 45%, transparent);
+    transition:
+      text-decoration-color 0.2s ease,
+      color 0.2s ease;
+  }
+  .link-edito:hover {
+    color: var(--teal-hover);
+    text-decoration-color: var(--gold);
+  }
+  .on-teal .link-edito {
+    color: var(--gold-light);
+    text-decoration-color: color-mix(in oklab, var(--gold-light) 45%, transparent);
+  }
+  .on-teal .link-edito:hover {
+    color: var(--cream);
+    text-decoration-color: var(--gold-light);
+  }
+
+  /*
+   * Traitement photo commun à toutes les images :
+   * légère dominante chaude, contraste doux, grain argentique.
+   */
+  .photo {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    background: #e7e0d2;
+  }
+  .photo img {
+    filter: sepia(0.16) saturate(0.86) contrast(1.04) brightness(1.02);
+  }
+  .photo::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: var(--gold);
+    mix-blend-mode: soft-light;
+    opacity: 0.22;
+  }
+  .photo::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background-image: var(--grain);
+    background-size: 160px 160px;
+    mix-blend-mode: overlay;
+    opacity: 0.32;
+  }
+}
+
+/* ——— La seule séquence animée : la couverture au chargement ——— */
+@keyframes line-rise {
+  from {
+    transform: translate3d(0, 110%, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+@keyframes photo-unveil {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+/* Léger rapprochement au chargement, en plus du recadrage éditorial. */
+@keyframes photo-settle {
+  from {
+    transform: scale(1.08);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+@keyframes soft-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.cover-line {
+  display: block;
+  overflow: hidden;
+  /* laisse passer les jambages (p, y) sans décaler la ligne suivante */
+  padding-bottom: 0.2em;
+  margin-bottom: -0.2em;
+}
+/* Encre sur le fond clair de la photographie et sur le papier. */
+.cover-line > span {
+  display: block;
+  padding-bottom: 0.2em;
+  margin-bottom: -0.2em;
+  color: var(--ink);
+}
+
+/* Contraste forcé (Windows) : on rend le titre en texte plein */
+@media (forced-colors: active) {
+  .cover-line > span {
+    background: none;
+    -webkit-text-fill-color: CanvasText;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .cover-line > span {
+    animation: line-rise 1.1s var(--ease-editorial) both;
+    animation-delay: calc(0.35s + var(--i, 0) * 0.14s);
+  }
+  .cover-photo {
+    animation: photo-unveil 1.3s var(--ease-editorial) 0.1s both;
+  }
+  .cover-photo img {
+    animation: photo-settle 2.2s var(--ease-out) 0.1s both;
+  }
+  .cover-after {
+    animation: soft-in 0.9s ease 1.15s both;
+  }
+  /* Pages intérieures : le titre se dévoile d'un seul bloc, la photo suit */
+  .cover-title-block {
+    animation: block-unveil 1.1s var(--ease-editorial) 0.15s both;
+  }
+  .cover-reveal .photo {
+    animation: photo-unveil 1.3s var(--ease-editorial) 0.35s both;
+  }
+}
+
+@keyframes block-unveil {
+  from {
+    clip-path: inset(-0.4em -0.4em 100% -0.4em);
+    transform: translate3d(0, 0.3em, 0);
+  }
+  to {
+    clip-path: inset(-0.4em -0.4em -0.4em -0.4em);
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/*
+ * ——— Micro-animations ———
+ * Lentes et feutrées, comme on tourne les pages d'un magazine. Les états de
+ * départ n'existent que sous `:root[data-motion]`, posé par un script en tête
+ * de page quand le navigateur accepte les animations ; `data-revealed` est
+ * ajouté au défilement par <MotionReveal>. Sans JavaScript ou avec
+ * `prefers-reduced-motion`, tout est affiché d'emblée, sans mouvement.
+ */
+
+/* Masque de ligne : le texte remonte dans son cadre (occasions, numéros) */
+.reveal-line {
+  display: block;
+  overflow: hidden;
+  /* Un peu d'air en haut : en Bodoni italique, les capitales et les accents
+     dépassent la boîte de ligne (interligne 1,08) et se faisaient rogner. */
+  padding: 0.2em 0.16em 0.22em 0.06em;
+  margin: -0.2em -0.16em -0.22em -0.06em;
+}
+.reveal-line > span {
+  display: inline-block;
+}
+.folio-mask {
+  overflow: hidden;
+  padding: 0 0.16em 0.2em;
+  margin: 0 -0.16em -0.2em;
+}
+.folio-mask > span {
+  display: inline-block;
+}
+
+:root[data-motion] {
+  /* 1. Titre courant : le filet se déroule, puis le folio remonte */
+  & [data-reveal="folio"] {
+    clip-path: inset(-1em -1em -1em -1em);
+    transition: clip-path 1.4s var(--ease-editorial);
+  }
+  & [data-reveal="folio"]:not([data-revealed]) {
+    clip-path: inset(-1em 100% -1em -1em);
+  }
+  & .folio-mask > span {
+    transition: transform 1.1s var(--ease-out) 0.45s;
+  }
+  & [data-reveal="folio"]:not([data-revealed]) .folio-mask > span {
+    transform: translateY(115%);
+  }
+
+  /* 2. Citation en exergue : dévoilée de gauche à droite, comme l'encre */
+  & [data-reveal="wipe"] {
+    clip-path: inset(-0.4em -0.6em -0.5em -1em);
+    transition: clip-path 2s var(--ease-editorial) 0.1s;
+  }
+  & [data-reveal="wipe"]:not([data-revealed]) {
+    clip-path: inset(-0.4em 100% -0.5em -1em);
+  }
+
+  /* 3. Lignes d'occasions et numéros de sommaire, l'un après l'autre */
+  & .reveal-line > span {
+    transition: transform 1.3s var(--ease-editorial);
+    transition-delay: calc(0.1s + var(--i, 0) * 0.14s);
+  }
+  & [data-reveal]:not([data-revealed]) .reveal-line > span {
+    transform: translateY(110%);
+  }
+
+  /* 4. Points de conduite qui se tracent, puis le lieu qui glisse en place */
+  & [data-reveal="leaders"] [data-leader] {
+    clip-path: inset(-0.6em 0 -0.6em 0);
+    transition: clip-path 1.2s var(--ease-editorial);
+    transition-delay: calc(0.15s + var(--i, 0) * 0.2s);
+  }
+  & [data-reveal="leaders"]:not([data-revealed]) [data-leader] {
+    clip-path: inset(-0.6em 100% -0.6em 0);
+  }
+  & [data-reveal="leaders"] [data-leader-label] {
+    transition:
+      opacity 0.9s ease,
+      transform 1.2s var(--ease-out);
+    transition-delay: calc(0.75s + var(--i, 0) * 0.2s);
+  }
+  & [data-reveal="leaders"]:not([data-revealed]) [data-leader-label] {
+    opacity: 0;
+    transform: translateX(-0.75em);
+  }
+
+}
+
+/* Balancier amorti de la pancarte « Open » */
+
+/* Survols : seulement avec une vraie souris et sans réduction des animations */
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  /* 7. Zoom feutré de l'image dans son cadre */
+  .photo-zoom img {
+    transition: transform 1.6s var(--ease-out);
+  }
+  .photo-zoom:hover img {
+    transform: scale(1.045);
+  }
+
+}
